@@ -52,7 +52,7 @@ This will create the app/models/ folder containing diabetes_rf_model.pkl and sca
 uvicorn app.main:app --reload
 ```
 
-The API will be available at http://127.0.0.1:8000/static/index.html.
+Open https://ml-predecting-diabetes-4.onrender.com in your browser..
 
 ## Folder Structure
 
