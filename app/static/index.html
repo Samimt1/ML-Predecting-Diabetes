@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diabetes Prediction</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav>
+      <div class="logo">Diabetes Predictor Risk</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container" id="home">
+      <h1>Diabetes Risk Prediction</h1>
+      <p class="subtitle">
+        Enter your health details to check your risk of diabetes.
+      </p>
+
+      <!-- Prediction Form -->
+      <form id="predictionForm">
+        <div class="form-group">
+          <label for="pregnancies">Pregnancies:</label>
+          <input type="number" id="pregnancies" name="pregnancies" required />
+        </div>
+        <div class="form-group">
+          <label for="glucose">Glucose Level (mg/dL):</label>
+          <input type="number" id="glucose" name="glucose" required />
+        </div>
+        <div class="form-group">
+          <label for="blood_pressure">Blood Pressure (mm Hg):</label>
+          <input
+            type="number"
+            id="blood_pressure"
+            name="blood_pressure"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="skin_thickness">Skin Thickness (mm):</label>
+          <input
+            type="number"
+            id="skin_thickness"
+            name="skin_thickness"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="insulin">Insulin Level (mu U/mL):</label>
+          <input type="number" id="insulin" name="insulin" required />
+        </div>
+        <div class="form-group">
+          <label for="bmi">BMI (kg/m²):</label>
+          <input type="number" step="0.1" id="bmi" name="bmi" required />
+        </div>
+        <div class="form-group">
+          <label for="diabetes_pedigree_function"
+            >Diabetes Pedigree Function:</label
+          >
+          <input
+            type="number"
+            step="0.01"
+            id="diabetes_pedigree_function"
+            name="diabetes_pedigree_function"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="age">Age (years):</label>
+          <input type="number" id="age" name="age" required />
+        </div>
+        <button type="submit">Predict Risk</button>
+      </form>
+
+      <!-- Prediction Result -->
+      <div class="result" id="result">
+        <h2>Prediction Result</h2>
+        <p id="predictionText">Your result will appear here.</p>
+        <p id="probabilityText"></p>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+      <h2>About This Project</h2>
+      <p>
+        This Diabetes Prediction API uses machine learning to assess your risk
+        of diabetes based on key health metrics. It is designed to help
+        individuals take proactive steps toward better health by providing early
+        insights into their diabetes risk. The model is trained on the Pima
+        Indians Diabetes Dataset and deployed using FastAPI.
+      </p>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+      <h2>Contact Us</h2>
+      <p>
+        If you have any questions or feedback, feel free to reach out to us:
+      </p>
+      <div class="contact-info">
+        <p><i class="fas fa-envelope"></i> Email: esubalew.samiye@gmail.com</p>
+        <p><i class="fas fa-phone"></i> Phone: +251960344062</p>
+        <p>
+          <i class="fas fa-map-marker-alt"></i> Address: Ethiopia, Debre Birhan
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 Diabetes Predictor. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Prediction -->
+    <script>
+      document
+        .getElementById("predictionForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const formData = {
+            pregnancies: parseFloat(
+              document.getElementById("pregnancies").value
+            ),
+            glucose: parseFloat(document.getElementById("glucose").value),
+            blood_pressure: parseFloat(
+              document.getElementById("blood_pressure").value
+            ),
+            skin_thickness: parseFloat(
+              document.getElementById("skin_thickness").value
+            ),
+            insulin: parseFloat(document.getElementById("insulin").value),
+            bmi: parseFloat(document.getElementById("bmi").value),
+            diabetes_pedigree_function: parseFloat(
+              document.getElementById("diabetes_pedigree_function").value
+            ),
+            age: parseFloat(document.getElementById("age").value),
+          };
+
+          try {
+            const response = await fetch("http://127.0.0.1:8000/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              const prediction =
+                result.prediction === 1 ? "Diabetic" : "Not Diabetic";
+              const probability = result.probability.toFixed(2);
+
+              document.getElementById(
+                "predictionText"
+              ).innerText = `Prediction: ${prediction}`;
+              document.getElementById(
+                "probabilityText"
+              ).innerText = `Probability: ${probability}`;
+
+              // Change result box color based on prediction
+              const resultBox = document.getElementById("result");
+              if (prediction === "Diabetic") {
+                resultBox.style.backgroundColor = "#ff6b6b"; // Red for diabetic
+              } else {
+                resultBox.style.backgroundColor = "#4caf50"; // Green for non-diabetic
+              }
+            } else {
+              document.getElementById("predictionText").innerText =
+                "Error making prediction. Please check your input.";
+              document.getElementById("probabilityText").innerText = "";
+            }
+          } catch (error) {
+            document.getElementById("predictionText").innerText =
+              "An error occurred. Please try again.";
+            document.getElementById("probabilityText").innerText = "";
+          }
+        });
+    </script>
+  </body>
+</html>

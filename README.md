@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ## Train the Model:
 
 ```bash
-Run the train_model.py
+Run train_model.py
 ```
 
 ## python train_model.py
@@ -52,7 +52,7 @@ This will create the app/models/ folder containing diabetes_rf_model.pkl and sca
 uvicorn app.main:app --reload
 ```
 
-The API will be available at http://127.0.0.1:8000.
+The API will be available at http://127.0.0.1:8000/static/index.html.
 
 ## Folder Structure
 
@@ -78,7 +78,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 
-For questions or feedback, please contact [Samuel esubalew] at [bikijoker18@gmail.com].
+For questions or feedback, please contact [Samuel esubalew] at [esubalew.samiye@gmail.com].
 
 ## Setup
 
